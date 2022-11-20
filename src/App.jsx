@@ -18,6 +18,12 @@ const App = () => {
     const contractAddress = "0xe63e220219d6df8E02baC414251233DA336BB5Fd";
     const contractABI = abi.abi;
     const getEthereumObject = () => window.ethereum;
+    const [message, setMsg] = useState('');
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      const wav = { message };
+      console.log(wav);
+    }
 
   
     const findMetaMaskAccount = async () => {
@@ -87,7 +93,7 @@ const App = () => {
 
         /*CONTRACT GOOD THRU HERE*/
 
-        const waveTxn = await wavePortalContract.wave("this is a message");
+        const waveTxn = await wavePortalContract.wave(message);
         console.log("Mining...", waveTxn.hash);
 
         await waveTxn.wait();
@@ -150,8 +156,10 @@ const getAllWaves = async () => {
   }
 
 
-
-
+/* this helped capture the form submission*/
+  const handleChange = (e) => {
+    setMessage(e.target.value);
+  }
 
   
 
@@ -169,7 +177,7 @@ const getAllWaves = async () => {
         </div>
 
         <button className="waveButton" onClick={wave}>
-          Wave at Me
+          Wav at Me
         </button>
 
         {!currentAccount && (
@@ -178,11 +186,30 @@ const getAllWaves = async () => {
           </button>
         )}
 
+      <div className="waveButton">
+      <form onSubmit={handleSubmit}>
+        <label> Send a wav bruh:</label>
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMsg(e.target.value)}
+        />
+        <button className="waveButton" onClick={wave}>
+        Send
+        </button>
+      <p> { message } </p>
+      
+      </form>
+      </div>
+        
+        
+
         {allWaves.map((wave, index) => {
           return (
             <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
               <div>Address: {wave.address}</div>
               <div>Time: {wave.timestamp.toString()}</div>
+
               <div>Message: {wave.message}</div>
             </div>)
         })}
